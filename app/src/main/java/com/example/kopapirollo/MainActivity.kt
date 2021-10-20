@@ -1,11 +1,13 @@
 package com.example.kopapirollo
 
+import android.content.DialogInterface
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 
 class MainActivity : AppCompatActivity() {
     lateinit var UserImage : ImageView
@@ -16,6 +18,9 @@ class MainActivity : AppCompatActivity() {
     lateinit var ButtonScissor : Button
 
     var userChoice = 0
+    var win = 0
+    var lose = 0
+    var draw = 0
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -35,6 +40,18 @@ class MainActivity : AppCompatActivity() {
         ButtonPaper.setOnClickListener { paperButtonPressed() }
         ButtonScissor = findViewById(R.id.btnScissor)
         ButtonScissor.setOnClickListener { scissorButtonPressed() }
+    }
+
+    fun defaultSettings() {
+        userChoice = 0
+        win = 0
+        lose = 0
+        draw = 0
+
+        UserImage.setImageResource(R.drawable.rock)
+        CpuImage.setImageResource(R.drawable.rock)
+
+        refreshScoreBoard()
     }
 
     fun rockButtonPressed() {
@@ -66,7 +83,9 @@ class MainActivity : AppCompatActivity() {
             CpuImage.setImageResource(R.drawable.scissors)
         }
 
-        if (userChoice == 2 && cpu == 0) {
+        if (userChoice == cpu) {
+            draw()
+        } else if (userChoice == 2 && cpu == 0) {
             lose()
         } else if (userChoice == 0 && cpu == 2) {
             win()
@@ -77,11 +96,47 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    fun draw() {
+        draw++
+        Toast.makeText(this, "Döntetlen", Toast.LENGTH_SHORT).show()
+    }
+
     fun lose() {
-        Toast.makeText(this, "lose", Toast.LENGTH_SHORT).show()
+        lose++
+        Toast.makeText(this, "Vesztettél", Toast.LENGTH_SHORT).show()
+        refreshScoreBoard()
     }
 
     fun win() {
-        Toast.makeText(this, "win", Toast.LENGTH_SHORT).show()
+        win++
+        Toast.makeText(this, "Nyertél", Toast.LENGTH_SHORT).show()
+        refreshScoreBoard()
+    }
+
+    fun refreshScoreBoard() {
+        ScoreBoard.setText("Eredmeny: Ember: ${win} Computer: ${lose}")
+        checkEndOfGame()
+    }
+
+    fun checkEndOfGame() {
+        if (win == 3) {
+            var myAlert = AlertDialog.Builder(this).setTitle("Nyertél")
+                .setMessage("Szeretne új játékot játszani?")
+                .setCancelable(false)
+                .setPositiveButton("Igen", DialogInterface.OnClickListener { dialog, id ->
+                    defaultSettings()
+                }).setNegativeButton("Nem", DialogInterface.OnClickListener { dialog, id ->
+                    finishAffinity()
+                }).show()
+        } else if (lose == 3) {
+            var myAlert = AlertDialog.Builder(this).setTitle("Vesztettél")
+                .setMessage("Szeretne új játékot játszani?")
+                .setCancelable(false)
+                .setPositiveButton("Igen", DialogInterface.OnClickListener { dialog, id ->
+                    defaultSettings()
+                }).setNegativeButton("Nem", DialogInterface.OnClickListener { dialog, id ->
+                    finishAffinity()
+                }).show()
+        }
     }
 }
