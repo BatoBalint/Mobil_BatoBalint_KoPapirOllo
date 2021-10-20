@@ -27,7 +27,22 @@ class MainActivity : AppCompatActivity() {
         CpuImage = findViewById(R.id.cpuImage)
         ScoreBoard = findViewById(R.id.scoreBoard)
         ButtonRock = findViewById(R.id.btnRock)
+        ButtonRock.setOnClickListener { rockButtonPressed() }
         ButtonPaper = findViewById(R.id.btnPaper)
+        ButtonPaper.setOnClickListener { paperButtonPressed() }
         ButtonScissor = findViewById(R.id.btnScissor)
+        ButtonScissor.setOnClickListener { scissorButtonPressed() }
+    }
+
+    fun rockButtonPressed() {
+        UserImage.setImageResource(R.drawable.rock)
+    }
+
+    fun paperButtonPressed() {
+        UserImage.setImageResource(R.drawable.paper)
+    }
+
+    fun scissorButtonPressed() {
+        UserImage.setImageResource(R.drawable.scissors)
     }
 }
